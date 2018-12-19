@@ -31,7 +31,7 @@ DWORD WINAPI SystemThread(void *data) {
 	sys.InitKernel(buffClassNo, buffsCount, buffsLength, 5);
 
 	/* Add automates to the system */
-	sys.Add(&automate, AUTOEXAMPLE_FSM, 1 /* the number of automates that will be added */, true);
+	sys.Add(&automate, SENDER_FSM, 1 /* the number of automates that will be added */, true);
 
 	/* Start the first automate - usually it sends the first message, 
 	since only automates can send messages */

@@ -1,8 +1,8 @@
 #pragma once
 
 
-#define AUTOEXAMPLE_MBX_ID    0
-#define AUTOEXAMPLE_FSM       0
+#define SENDER_MBX_ID    0
+#define SENDER_FSM       0
 #define MSG_CHANGE_STATE	  0x00
 #define MSG_LEN				  15
 #define DEFAULT_PORT		  80					//protocol over wich we will be sending messages

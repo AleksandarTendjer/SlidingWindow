@@ -26,6 +26,7 @@ public:
 	SenderAuto();
 	~SenderAuto();
 	void ChangeStateIdle();
+	void ChangeStateSent();
 	void Initialize();
 	void Start();
 };

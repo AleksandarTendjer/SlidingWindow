@@ -1,8 +1,8 @@
-#include <stdio.h>
+#include "Communication.h"
 #include "SenderAuto.h"
 
 
-SenderAuto::SenderAuto() : FiniteStateMachine(AUTOEXAMPLE_FSM, AUTOEXAMPLE_MBX_ID, 5, 5, 2) {
+SenderAuto::SenderAuto() : FiniteStateMachine(SENDER_FSM, SENDER_MBX_ID, 5, 5, 2) {
 }
 
 SenderAuto::~SenderAuto() {
@@ -10,12 +10,12 @@ SenderAuto::~SenderAuto() {
 
 
 uint8 SenderAuto::GetAutomate() {
-	return AUTOEXAMPLE_FSM;
+	return SENDER_FSM;
 }
 
 /* This function actually connnects the AutoExamplee with the mailbox. */
 uint8 SenderAuto::GetMbxId() {
-	return AUTOEXAMPLE_MBX_ID;
+	return SENDER_MBX_ID;
 }
 
 MessageInterface *SenderAuto::GetMessageInterface(uint32 id) {
@@ -38,11 +38,17 @@ void SenderAuto::NoFreeInstances() {
 }
 
 void SenderAuto::ChangeStateIdle() {
-	printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
-	///procesing function(preparing messages,sending messages)
-	//set state to SENDER_SENT
 
+	//calling sending message function,all connection to the server has alredy been configurated
+
+	printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
 	SetState(SENDER_SENT);
+}
+void SenderAuto::ChangeStateSent() {
+
+	printf("SenderAuto[%d]::ChangeStateSent() - receive message !\n", GetObjectId());
+	SetState(SENDER_IDLE);
+
 }
 
 void SenderAuto::Initialize() {
@@ -50,9 +56,16 @@ void SenderAuto::Initialize() {
   SetState(SENDER_IDLE);
   //all event change 
   InitEventProc(SENDER_IDLE, MSG_CHANGE_STATE,(PROC_FUN_PTR)&SenderAuto::ChangeStateIdle);
+  InitEventProc(SENDER_SENT, MSG_CHANGE_STATE, (PROC_FUN_PTR)&SenderAuto::ChangeStateSent);
   SetDefaultFSMData();
 }
 
 /* Initial system message */
 void SenderAuto::Start() {
+
+	//slanje poruke za kraj promene stanja 
+	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
+	SetMsgToAutomate(SENDER_FSM); 
+	SetMsgObjectNumberTo(1); 
+	SendMessage(SENDER_MBX_ID);
 }
