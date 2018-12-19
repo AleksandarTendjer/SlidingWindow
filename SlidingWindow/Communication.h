@@ -9,8 +9,12 @@
 #include <ws2tcpip.h>
 #include "Constants.h"
 
+//bool msgIsWindow=true ;
+
+
 int CreateSocket();
 int CloseSocket(int);
 int ConnectToServer();
 int ReceiveMessage();
-int SendMessage();
+int SendMessageFun();
+int SendWindow(char*);

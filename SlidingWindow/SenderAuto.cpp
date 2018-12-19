@@ -1,6 +1,7 @@
 #include "Communication.h"
 #include "SenderAuto.h"
-
+//extern bool msgIsWindow;
+int windowSize;
 
 SenderAuto::SenderAuto() : FiniteStateMachine(SENDER_FSM, SENDER_MBX_ID, 5, 5, 2) {
 }
@@ -40,7 +41,33 @@ void SenderAuto::NoFreeInstances() {
 void SenderAuto::ChangeStateIdle() {
 
 	//calling sending message function,all connection to the server has alredy been configurated
+	int i = 0;
+	char ch;
+	char dataBuffer[BUFFER_SIZE];
+	int sent = 0;
 
+	printf("Window size: \n");
+
+	//prihvatanje karaktera sa tastature	
+	while ((ch = (char)getchar()) != '\n')
+	{
+		dataBuffer[i] = ch;
+		 i++;
+	}
+	dataBuffer[i]= '\0';
+	//set window size
+	windowSize = atoi(dataBuffer);
+	//send window size to the reciever
+	SendWindow(dataBuffer);
+
+	while (sent < windowSize)
+	{
+		printf("message: \n");
+		SendMessageFun();
+		++sent;
+	}
+	
+	//prihvatanje karaktera sa tastature	
 	printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
 	SetState(SENDER_SENT);
 }

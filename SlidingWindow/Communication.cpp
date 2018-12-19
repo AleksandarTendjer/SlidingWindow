@@ -1,4 +1,4 @@
-
+#include <stdlib.h>
 #include "Communication.h"
 
 int sock;
@@ -8,6 +8,7 @@ char message[MSG_LEN];
 int readSize; //citanje duzine bajtova u primeljenoj poruci 
 int counter = 0;
 int v = 0;
+
 
 int CreateSocket()
 {
@@ -97,7 +98,7 @@ int ReceiveMessage()
 
 }
 //funkcija za generisanje iz terminala i slanje poruka
-int SendMessage()
+int SendMessageFun()
 {
 	int i = 0;
 	char ch;
@@ -109,7 +110,20 @@ int SendMessage()
 		i++;
 	}
 	message[i] = '\0';
+
 	if (send(sock, (char*)&message, strlen(message), 0) < 0)
+	{
+		perror("Send failed\n");
+		WSACleanup();
+		return -1;
+	}
+	return 1;
+}
+//funkcija za generisanje iz terminala i slanje poruka
+int SendWindow(char* msg)
+{
+	
+	if (send(sock,msg,strlen(msg), 0) < 0)
 	{
 		perror("Send failed\n");
 		WSACleanup();

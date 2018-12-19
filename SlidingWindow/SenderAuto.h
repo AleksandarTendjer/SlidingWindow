@@ -6,6 +6,7 @@
 
 
 #include "Constants.h"
+
 #include "../kernel/stdMsgpc16pl16.h"
 typedef stdMsg_pc16_pl16 StandardMessage;
 
@@ -20,8 +21,7 @@ class SenderAuto : public FiniteStateMachine {
 	void	SetDefaultFSMData();
 	void	NoFreeInstances();
 	uint8	GetMbxId();
-	uint8	GetAutomate();
-	
+	uint8	GetAutomate();	
 public:
 	SenderAuto();
 	~SenderAuto();
