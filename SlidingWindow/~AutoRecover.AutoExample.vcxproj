@@ -162,7 +162,6 @@
     <ClCompile Include="SenderAuto.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Communication.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="kernel\buffers.h" />
     <ClInclude Include="kernel\buffersQueue.h" />

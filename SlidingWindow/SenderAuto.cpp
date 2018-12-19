@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "SenderAuto.h"
 
+
 SenderAuto::SenderAuto() : FiniteStateMachine(AUTOEXAMPLE_FSM, AUTOEXAMPLE_MBX_ID, 5, 5, 2) {
 }
 
@@ -35,13 +36,14 @@ void SenderAuto::SetDefaultFSMData() {
 void SenderAuto::NoFreeInstances() {
 	printf("[%d] SenderAuto::NoFreeInstances()\n", GetObjectId());
 }
+
 void SenderAuto::ChangeStateIdle() {
 	printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
 	///procesing function(preparing messages,sending messages)
 	//set state to SENDER_SENT
+
 	SetState(SENDER_SENT);
 }
-
 
 void SenderAuto::Initialize() {
 	//se default state in IDLE 

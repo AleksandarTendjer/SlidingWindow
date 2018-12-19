@@ -1,12 +1,15 @@
-#include <stdio.h>
-#include <conio.h>
-
+#include "Communication.h"
 #include "fsmsystem.h"
 #include "logfile.h"
 #include "SenderAuto.h"
 
+
+
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
+
+
+
 
 DWORD WINAPI SystemThread(void *data) {
 	SenderAuto automate;
@@ -45,6 +48,7 @@ DWORD WINAPI SystemThread(void *data) {
 void main() {
 	DWORD thread_id;
 	HANDLE thread_handle;
+	//connecting 
 
 	/* Start operating thread. */
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);

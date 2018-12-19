@@ -4,11 +4,8 @@
 #include <fsm.h>
 #include <fsmsystem.h>
 
-#define AUTOEXAMPLE_MBX_ID    0
-#define AUTOEXAMPLE_FSM       0
-#define MSG_CHANGE_STATE		0x00
 
-
+#include "Constants.h"
 #include "../kernel/stdMsgpc16pl16.h"
 typedef stdMsg_pc16_pl16 StandardMessage;
 

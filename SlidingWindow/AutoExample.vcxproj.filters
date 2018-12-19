@@ -93,6 +93,9 @@
     <ClCompile Include="SenderAuto.cpp">
       <Filter>SenderAuto</Filter>
     </ClCompile>
+    <ClCompile Include="Communication.cpp">
+      <Filter>SenderAuto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kernel\buffers.h">
@@ -186,6 +189,12 @@
       <Filter>kernel</Filter>
     </ClInclude>
     <ClInclude Include="SenderAuto.h">
+      <Filter>SenderAuto</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>SenderAuto</Filter>
+    </ClInclude>
+    <ClInclude Include="Communication.h">
       <Filter>SenderAuto</Filter>
     </ClInclude>
   </ItemGroup>
