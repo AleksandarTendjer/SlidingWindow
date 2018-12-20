@@ -11,8 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CB935F92-18E8-42AF-A13E-47D4C39ABE06}</ProjectGuid>
-    <ProjectName>Sender</ProjectName>
+    <ProjectGuid>{D2049A1C-22BF-4C3F-82B0-3FF830B15850}</ProjectGuid>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -163,7 +162,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="SenderAuto.cpp" />
+    <ClCompile Include="ReceiverAuto.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Communication.h" />
@@ -198,7 +197,7 @@
     <ClInclude Include="kernel\UdpFSM.h" />
     <ClInclude Include="kernel\UdpLogInterface.h" />
     <ClInclude Include="kernel\uniSock.h" />
-    <ClInclude Include="SenderAuto.h" />
+    <ClInclude Include="ReceiverAuto.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="kernel\KernelLib.lib" />

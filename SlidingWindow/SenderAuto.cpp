@@ -1,7 +1,8 @@
 #include "Communication.h"
 #include "SenderAuto.h"
-//extern bool msgIsWindow;
+
 int windowSize;
+char dataBuffer[BUFFER_SIZE];
 
 SenderAuto::SenderAuto() : FiniteStateMachine(SENDER_FSM, SENDER_MBX_ID, 5, 5, 2) {
 }
@@ -43,7 +44,6 @@ void SenderAuto::ChangeStateIdle() {
 	//calling sending message function,all connection to the server has alredy been configurated
 	int i = 0;
 	char ch;
-	char dataBuffer[BUFFER_SIZE];
 	int sent = 0;
 
 	printf("Window size: \n");
@@ -58,22 +58,33 @@ void SenderAuto::ChangeStateIdle() {
 	//set window size
 	windowSize = atoi(dataBuffer);
 	//send window size to the reciever
-	SendWindow(dataBuffer);
+	Send(dataBuffer);
 
-	while (sent < windowSize)
+	while (SenderAuto::sentCount < windowSize)
 	{
 		printf("message: \n");
 		SendMessageFun();
-		++sent;
 	}
 	
-	//prihvatanje karaktera sa tastature	
-	printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
+
+	//printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
+	//send message so that initEventProc can be executed
+	PrepareNewMessage(0x00, MSG_SENT_STATE);
+	SetMsgToAutomate(SENDER_FSM);
+	SetMsgObjectNumberTo(1);
+	SendMessage(SENDER_MBX_ID);
 	SetState(SENDER_SENT);
 }
 void SenderAuto::ChangeStateSent() {
 
 	printf("SenderAuto[%d]::ChangeStateSent() - receive message !\n", GetObjectId());
+	SenderAuto::sentCount++;
+	Send(itoa(SenderAuto::sentCount,dataBuffer,10));	
+	//send message so that initEventProc can be executed
+	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
+	SetMsgToAutomate(SENDER_FSM);
+	SetMsgObjectNumberTo(1);
+	SendMessage(SENDER_MBX_ID);
 	SetState(SENDER_IDLE);
 
 }
@@ -83,14 +94,14 @@ void SenderAuto::Initialize() {
   SetState(SENDER_IDLE);
   //all event change 
   InitEventProc(SENDER_IDLE, MSG_CHANGE_STATE,(PROC_FUN_PTR)&SenderAuto::ChangeStateIdle);
-  InitEventProc(SENDER_SENT, MSG_CHANGE_STATE, (PROC_FUN_PTR)&SenderAuto::ChangeStateSent);
+  InitEventProc(SENDER_SENT, MSG_SENT_STATE, (PROC_FUN_PTR)&SenderAuto::ChangeStateSent);
   SetDefaultFSMData();
 }
 
 /* Initial system message */
 void SenderAuto::Start() {
 
-	//slanje poruke za kraj promene stanja 
+	// sending a message to itself so that the Sender Automate can change state   
 	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 	SetMsgToAutomate(SENDER_FSM); 
 	SetMsgObjectNumberTo(1); 

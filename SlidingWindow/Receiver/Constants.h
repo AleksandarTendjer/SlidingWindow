@@ -1,8 +1,9 @@
 #pragma once
 
 
-#define SENDER_MBX_ID    0
-#define SENDER_FSM       0
+
+#define RECEIVER_MBX_ID    0
+#define RECEIVER_FSM       0
 #define MSG_CHANGE_STATE	  0x00
 #define MSG_SENT_STATE		  0x01
 #define MSG_LEN				  15

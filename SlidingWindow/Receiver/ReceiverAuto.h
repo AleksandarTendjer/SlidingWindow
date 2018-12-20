@@ -3,15 +3,13 @@
 
 #include <fsm.h>
 #include <fsmsystem.h>
-
-
 #include "Constants.h"
 
 #include "../kernel/stdMsgpc16pl16.h"
 typedef stdMsg_pc16_pl16 StandardMessage;
 
-class SenderAuto : public FiniteStateMachine {
-	enum SenderAutoStates { SENDER_IDLE,SENDER_SENT };
+class ReceiverAuto : public FiniteStateMachine {
+	enum ReceiverAutoStates { RECEIVER_IDLE,RECEIVER_RECEIVED };
 
 	StandardMessage StandardMsgCoding;
 
@@ -21,15 +19,19 @@ class SenderAuto : public FiniteStateMachine {
 	void	SetDefaultFSMData();
 	void	NoFreeInstances();
 	uint8	GetMbxId();
-	uint8	GetAutomate();	
+	uint8	GetAutomate();
+
 public:
-	SenderAuto();
-	~SenderAuto();
+	ReceiverAuto();
+	~ReceiverAuto();
+	bool windowMsg=true;
+	int windowSize=0;
+	int recvCount = 0;
 	int sentCount = 0;
-	void ChangeStateIdle();
-	void ChangeStateSent();
 	void Initialize();
 	void Start();
+	void ChangeStateIdle();
+	void ChangeStateReceived();
 };
 
 #endif /* _AUTOMAT_H */

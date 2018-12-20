@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include <stdio.h>
 #include <conio.h>
 
@@ -17,4 +18,4 @@ int CloseSocket();
 int ConnectToServer();
 int ReceiveMessage();
 int SendMessageFun();
-int Send(char*);
+int ReceiveWindow(char *);

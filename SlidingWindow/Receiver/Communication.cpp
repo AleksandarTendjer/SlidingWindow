@@ -44,7 +44,7 @@ int CreateSocket()
 	//prihvatanje karaktera sa tastature	
 	while ((*ch = (char)getchar()) != '\n')
 	{
-			ch++;
+		ch++;
 	}
 	*ch = '\0';
 
@@ -86,13 +86,27 @@ int ReceiveMessage()
 
 	while ((readSize = recv(sock, message, MSG_LEN, 0))>0)
 	{
-		// printf("%s\n",message);
 		message[readSize] = '\0';
 		puts(message);
 		return 1;
 	}
 
 	perror("Transfer form  server failed \n");
+	return -1;
+
+}
+//funkcija za prijem poruka
+int ReceiveWindow(char *msg)
+{
+
+	while ((readSize = recv(sock, msg, MSG_LEN, 0))>0)
+	{
+		msg[readSize] = '\0';
+		puts(msg);
+		return 1;
+	}
+
+	perror("Transfer form  sender failed \n");
 	WSACleanup();
 	return -1;
 
@@ -112,18 +126,6 @@ int SendMessageFun()
 	*ch = '\0';
 
 	if (send(sock, (char*)&message, strlen(message), 0) < 0)
-	{
-		perror("Send failed\n");
-		WSACleanup();
-		return -1;
-	}
-	return 1;
-}
-//funkcija za generisanje iz terminala i slanje poruka
-int Send(char* msg)
-{
-	
-	if (send(sock,msg,strlen(msg), 0) < 0)
 	{
 		perror("Send failed\n");
 		WSACleanup();

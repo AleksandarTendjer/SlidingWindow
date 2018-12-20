@@ -1,18 +1,14 @@
 #include "Communication.h"
 #include "fsmsystem.h"
 #include "logfile.h"
-#include "SenderAuto.h"
-
+#include "ReceiverAuto.h"
 
 
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
 
-
-
-
 DWORD WINAPI SystemThread(void *data) {
-	SenderAuto automate;
+	ReceiverAuto automate;
 
 	/* Kernel buffer description block */
 	/* number of buffer types */
@@ -31,7 +27,7 @@ DWORD WINAPI SystemThread(void *data) {
 	sys.InitKernel(buffClassNo, buffsCount, buffsLength, 5);
 
 	/* Add automates to the system */
-	sys.Add(&automate, SENDER_FSM, 1 /* the number of automates that will be added */, true);
+	sys.Add(&automate, RECEIVER_FSM, 1 /* the number of automates that will be added */, true);
 
 	/* Start the first automate - usually it sends the first message, 
 	since only automates can send messages */
@@ -45,16 +41,9 @@ DWORD WINAPI SystemThread(void *data) {
 	return 0;
 }
 
-int  main() {
+void main() {
 	DWORD thread_id;
 	HANDLE thread_handle;
-	////////////////////////connecting//////////////////////////////////////////
-	if (CreateSocket() == -1)
-		return 1;
-	if (ConnectToServer() == -1)
-		return 1;
-	///////////////////////////////////////////////////////////////////////////
-
 
 	/* Start operating thread. */
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);
@@ -66,7 +55,6 @@ int  main() {
 	printf("[*] Stopping system...\n");
 	sys.StopSystem();
 
-	CloseSocket();
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
 }
