@@ -3,7 +3,8 @@
 #include "logfile.h"
 #include "SenderAuto.h"
 
-
+//char* dataBuffer[20];
+int i = 0;
 
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
@@ -48,11 +49,31 @@ DWORD WINAPI SystemThread(void *data) {
 int  main() {
 	DWORD thread_id;
 	HANDLE thread_handle;
+	//char dataBuffer[BUFFER_SIZE];
+	//reading input from file
+	
+	//while (fgets(readLine, 100, f) != NULL)
+	//fscanf(f, "%s", dataBuffer);
+	//printf("%s", dataBuffer);
+	//FILE* f = fopen("Message.txt", "r");
+	//if (f == NULL)
+	//{
+	//	printf("Could not open file!");
+	//}
+	//dataBuffer[0] = (char*)malloc(BUFFER_SIZE * sizeof(char));
+	//while ((fgets(dataBuffer[i], 100, f) != NULL) && (*dataBuffer[i] != '\n'))
+	//{
+	//	++i;
+	//	//dynamically alocate the memory for all other strings
+	//	dataBuffer[i] = (char*)malloc(BUFFER_SIZE * sizeof(char));
+	//}
+
+	//printf("%s", dataBuffer[i]);
 	////////////////////////connecting//////////////////////////////////////////
-	if (CreateSocket() == -1)
+	/*if (CreateSocket() == -1)
 		return 1;
 	if (ConnectToServer() == -1)
-		return 1;
+		return 1;*/
 	///////////////////////////////////////////////////////////////////////////
 
 

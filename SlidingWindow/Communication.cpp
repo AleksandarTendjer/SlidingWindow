@@ -97,7 +97,7 @@ int ReceiveMessage()
 	return -1;
 
 }
-//funkcija za generisanje iz terminala i slanje poruka
+//funkcija za citanje iz terminala i slanje poruka
 int SendMessageFun()
 {
 	int i = 0;
