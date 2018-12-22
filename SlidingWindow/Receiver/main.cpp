@@ -6,7 +6,7 @@
 
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
-
+int probabilityLoc;
 DWORD WINAPI SystemThread(void *data) {
 	ReceiverAuto automate;
 
@@ -21,6 +21,7 @@ DWORD WINAPI SystemThread(void *data) {
 	/* Logging setting - to a file in this case */
 	LogFile lf("log.log" /*log file name*/, "./log.ini" /* message translator file */);
 	LogAutomateNew::SetLogInterface(&lf);
+	automate.probability = probabilityLoc;
 
 	/* Mandatory kernel initialization */
 	printf("[*] Initializing system...\n");
@@ -36,15 +37,37 @@ DWORD WINAPI SystemThread(void *data) {
 	/* Starts the system - dispatches system messages */
 	printf("[*] Starting system...\n");
 	sys.Start();
-
+	//ouput details
+	printf("Sent packets: %d",automate.sentCount);
+	printf("Received packets: %d", automate.recvCount);
+	printf("Probability of packet loss: %d",automate.probability);
 	/* Finish thread */
 	return 0;
 }
 
-void main() {
+int main(int argc, char *argv[]) {
 	DWORD thread_id;
 	HANDLE thread_handle;
-
+	probabilityLoc = atoi(argv[1]);
+	///////////////////////////////////////////////Creating a server socket,listening and accepting////////////////////////////////
+	if (CreateSocket() < 0)
+	{
+		return -1;
+	}
+	if (BindSocket() < 0)
+	{
+		return -1;
+	}
+	if (ListenConnection() < 0)
+	{
+		return -1;
+	}
+	if (AcceptConnection() < 0)
+	{
+		return -1;
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	/* Start operating thread. */
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);
 
@@ -57,4 +80,5 @@ void main() {
 
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
+	return 0;
 }

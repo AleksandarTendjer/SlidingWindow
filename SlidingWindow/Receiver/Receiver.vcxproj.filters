@@ -4,13 +4,13 @@
     <Filter Include="kernel">
       <UniqueIdentifier>{1d86edae-8378-45c5-9719-401dbd69fce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SenderAuto">
+    <Filter Include="ReceiverAuto">
       <UniqueIdentifier>{880ca5ad-7329-47c5-99c4-895c6bba155d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClCompile>
     <ClCompile Include="kernel\buffers.cpp">
       <Filter>kernel</Filter>
@@ -91,10 +91,10 @@
       <Filter>kernel</Filter>
     </ClCompile>
     <ClCompile Include="ReceiverAuto.cpp">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClCompile>
     <ClCompile Include="Communication.cpp">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,13 +189,13 @@
       <Filter>kernel</Filter>
     </ClInclude>
     <ClInclude Include="ReceiverAuto.h">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClInclude>
     <ClInclude Include="Communication.h">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
-      <Filter>SenderAuto</Filter>
+      <Filter>ReceiverAuto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

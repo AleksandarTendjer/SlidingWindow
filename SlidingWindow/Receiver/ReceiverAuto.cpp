@@ -39,7 +39,7 @@ void ReceiverAuto::NoFreeInstances() {
 void ReceiverAuto::Initialize() {
   SetState(RECEIVER_IDLE);
   InitEventProc(RECEIVER_IDLE, MSG_CHANGE_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateIdle);
-  InitEventProc(RECEIVER_RECEIVED, MSG_SENT_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateReceived);
+  InitEventProc(RECEIVER_RECEIVED, MSG_RECEIVED_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateReceived);
   SetDefaultFSMData();
 }
 
@@ -47,20 +47,45 @@ void ReceiverAuto::Initialize() {
 void ReceiverAuto::ChangeStateIdle() {
 	//implement receiving messages and packet loss
 	char buffer[MSG_LEN];
-	if (windowMsg == true)
+	int percentage;
+	if (ReceiverAuto::windowMsg == true)
 	{
 		ReceiveWindow(buffer);
 		ReceiverAuto:windowMsg = false;
 	}
-
-	while (true)
+	windowSize = atoi(buffer);
+	//percentage of data loss
+	//every &percentage packet will be lost
+	//probability=number of packets we want to lose,
+	//every percentage packet will be lost in the window
+	percentage = round(windowSize/probability);
+	++ReceiverAuto::sentCount;
+	//if percentage is 
+	if ((sentCount%percentage)!= 0)
 	{
 
+		// sending a message to itself so that the Receiver Automate can change state
+		PrepareNewMessage(0x00, MSG_RECEIVED_STATE);
+		SetMsgToAutomate(RECEIVER_FSM);
+		SetMsgObjectNumberTo(1);
+		SendMessage(RECEIVER_MBX_ID);
+		SetState(RECEIVER_RECEIVED);
 	}
-
-	SetState(RECEIVER_RECEIVED);
+	else //get back to idle state
+	{
+		// sending a message to itself so that the Receiver Automate can change state
+		PrepareNewMessage(0x00, MSG_CHANGE_STATE);
+		SetMsgToAutomate(RECEIVER_FSM);
+		SetMsgObjectNumberTo(1);
+		SendMessage(RECEIVER_MBX_ID);
+		SetState(RECEIVER_IDLE);
+	}
 }
 void ReceiverAuto::ChangeStateReceived() {
+
+	//the packet is received 
+	++ReceiverAuto::recvCount;
+
 	//receive sent messages count and compare to the received count
 	SetState(RECEIVER_IDLE);
 }

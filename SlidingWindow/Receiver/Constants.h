@@ -5,7 +5,7 @@
 #define RECEIVER_MBX_ID    0
 #define RECEIVER_FSM       0
 #define MSG_CHANGE_STATE	  0x00
-#define MSG_SENT_STATE		  0x01
+#define MSG_RECEIVED_STATE		  0x01
 #define MSG_LEN				  15
 #define DEFAULT_PORT		  80					//protocol over wich we will be sending messages
 #define SERVER_PORT			  27015					// Port number of server that will be used for communication with clients

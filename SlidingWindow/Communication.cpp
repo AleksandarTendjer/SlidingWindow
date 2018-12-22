@@ -2,7 +2,7 @@
 #include "Communication.h"
 
 int sock;
-static struct sockaddr_in server;
+static struct sockaddr_in server,client;
 char message[MSG_LEN];
 int readSize; //citanje duzine bajtova u primeljenoj poruci 
 int counter = 0;

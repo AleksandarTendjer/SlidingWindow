@@ -28,6 +28,7 @@ public:
 	int windowSize=0;
 	int recvCount = 0;
 	int sentCount = 0;
+	int probability = 0;
 	void Initialize();
 	void Start();
 	void ChangeStateIdle();

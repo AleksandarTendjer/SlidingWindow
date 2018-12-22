@@ -14,6 +14,9 @@
 
 
 int CreateSocket();
+int  ListenConnection();
+int AcceptConnection();
+int BindSocket();
 int CloseSocket();
 int ConnectToServer();
 int ReceiveMessage();

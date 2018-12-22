@@ -46,36 +46,18 @@ DWORD WINAPI SystemThread(void *data) {
 	return 0;
 }
 
-int  main() {
+int  main(int argc, char *argv[]) {
 	DWORD thread_id;
 	HANDLE thread_handle;
-	//char dataBuffer[BUFFER_SIZE];
-	//reading input from file
-	
-	//while (fgets(readLine, 100, f) != NULL)
-	//fscanf(f, "%s", dataBuffer);
-	//printf("%s", dataBuffer);
-	//FILE* f = fopen("Message.txt", "r");
-	//if (f == NULL)
-	//{
-	//	printf("Could not open file!");
-	//}
-	//dataBuffer[0] = (char*)malloc(BUFFER_SIZE * sizeof(char));
-	//while ((fgets(dataBuffer[i], 100, f) != NULL) && (*dataBuffer[i] != '\n'))
-	//{
-	//	++i;
-	//	//dynamically alocate the memory for all other strings
-	//	dataBuffer[i] = (char*)malloc(BUFFER_SIZE * sizeof(char));
-	//}
 
-	//printf("%s", dataBuffer[i]);
+	
+
 	////////////////////////connecting//////////////////////////////////////////
-	/*if (CreateSocket() == -1)
+	if (CreateSocket() == -1)
 		return 1;
 	if (ConnectToServer() == -1)
-		return 1;*/
+		return 1;
 	///////////////////////////////////////////////////////////////////////////
-
 
 	/* Start operating thread. */
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);
@@ -90,4 +72,5 @@ int  main() {
 	CloseSocket();
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
+	return 0;
 }

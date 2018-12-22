@@ -2,7 +2,8 @@
 #include "Communication.h"
 
 int sock;
-static struct sockaddr_in server;
+int clientSock;
+static struct sockaddr_in server,client;
 char message[MSG_LEN];
 int readSize; //citanje duzine bajtova u primeljenoj poruci 
 int counter = 0;
@@ -67,18 +68,45 @@ int CloseSocket()
 	return 1;
 }
 
-int ConnectToServer()
+int  ListenConnection()
 {
-	if (connect(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
+	if (listen(sock, 1) < 0)
 	{
-		perror("Connection to  server failed\n");
-		WSACleanup();
+		perror("Listen connection from Client is not possible\n");
 		return -1;
 	}
-	printf("Connected\n");
 
 	return 1;
 }
+//binding a scoket with the ip adress
+int BindSocket()
+{
+	if (bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0)
+	{
+		perror("bind failed. Error");
+		return -1;
+	}
+	puts("bind done");
+	return 1;
+}
+
+int AcceptConnection()
+{
+	int c;
+	puts("Waiting for incomming connnections ...");
+	c = sizeof(struct sockaddr_in);
+
+	//accept connection from an incoming client
+	clientSock = accept(sock, (struct sockaddr *)&client, (socklen_t*)&c);
+	if (clientSock < 0)
+	{
+		perror("accept failed");
+		return -1;
+	}
+	puts("Connection accepted");
+	return 1;
+}
+
 
 //funkcija za prijem poruka
 int ReceiveMessage()
@@ -91,7 +119,7 @@ int ReceiveMessage()
 		return 1;
 	}
 
-	perror("Transfer form  server failed \n");
+	perror("Transfer form  sender failed \n");
 	return -1;
 
 }
