@@ -87,7 +87,7 @@ void SenderAuto::ChangeStateIdle() {
 	//send message so that initEventProc can be executed
 	PrepareNewMessage(0x00, MSG_SENT_STATE);
 	SetMsgToAutomate(SENDER_FSM);
-	SetMsgObjectNumberTo(1);
+	SetMsgObjectNumberTo(0);
 	SendMessage(SENDER_MBX_ID);
 	SetState(SENDER_SENT);
 }
@@ -99,7 +99,7 @@ void SenderAuto::ChangeStateSent() {
 	//send message so that initEventProc can be executed
 	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 	SetMsgToAutomate(SENDER_FSM);
-	SetMsgObjectNumberTo(1);
+	SetMsgObjectNumberTo(0);
 	SendMessage(SENDER_MBX_ID);
 	SetState(SENDER_IDLE);
 
@@ -120,6 +120,6 @@ void SenderAuto::Start() {
 	// sending a message to itself so that the Sender Automate can change state   
 	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 	SetMsgToAutomate(SENDER_FSM); 
-	SetMsgObjectNumberTo(1); 
+	SetMsgObjectNumberTo(0); 
 	SendMessage(SENDER_MBX_ID);
 }

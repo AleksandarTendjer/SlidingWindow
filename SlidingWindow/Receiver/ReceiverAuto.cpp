@@ -67,7 +67,7 @@ void ReceiverAuto::ChangeStateIdle() {
 		// sending a message to itself so that the Receiver Automate can change state
 		PrepareNewMessage(0x00, MSG_RECEIVED_STATE);
 		SetMsgToAutomate(RECEIVER_FSM);
-		SetMsgObjectNumberTo(1);
+		SetMsgObjectNumberTo(0);
 		SendMessage(RECEIVER_MBX_ID);
 		SetState(RECEIVER_RECEIVED);
 	}
@@ -76,7 +76,7 @@ void ReceiverAuto::ChangeStateIdle() {
 		// sending a message to itself so that the Receiver Automate can change state
 		PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 		SetMsgToAutomate(RECEIVER_FSM);
-		SetMsgObjectNumberTo(1);
+		SetMsgObjectNumberTo(0);
 		SendMessage(RECEIVER_MBX_ID);
 		SetState(RECEIVER_IDLE);
 	}
@@ -95,6 +95,6 @@ void ReceiverAuto::Start() {
 	// sending a message to itself so that the Receiver Automate can change state   
 	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 	SetMsgToAutomate(RECEIVER_FSM);
-	SetMsgObjectNumberTo(1);
+	SetMsgObjectNumberTo(0);
 	SendMessage(RECEIVER_MBX_ID);
 }
