@@ -15,9 +15,9 @@ DWORD WINAPI SystemThread(void *data) {
 	/* number of buffer types */
 	const uint8 buffClassNo =  4; 
 	/* number of buffers of each buffer type */
-	uint32 buffsCount[buffClassNo] = { 50 }; 
+	uint32 buffsCount[buffClassNo] = { 50 , 50, 50, 10 };
 	/* buffer size for each buffer type */
- 	uint32 buffsLength[buffClassNo] = { 128}; 
+ 	uint32 buffsLength[buffClassNo] = { 128, 256, 512, 1024 };
 	
 	/* Logging setting - to a file in this case */
 	LogFile lf("log.log" /*log file name*/, "./log.ini" /* message translator file */);
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 	{
 		return -1;
 	}
-	if (ListenConnection() < 0)
+	/*if (ListenConnection() < 0)
 	{
 		return -1;
 	}
@@ -67,6 +67,7 @@ int main(int argc, char *argv[]) {
 	{
 		return -1;
 	}
+	*/
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/* Start operating thread. */
