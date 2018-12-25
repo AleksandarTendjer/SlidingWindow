@@ -64,7 +64,6 @@ void ReceiverAuto::ChangeStateIdle() {
 		percentage = round(windowSize / probability);
 	}
 	ReceiveMsg(buffer);
-	++ReceiverAuto::sentCount;
 	//if percentage is 
 	if ((sentCount%percentage)!= 0)
 	{
@@ -90,7 +89,8 @@ void ReceiverAuto::ChangeStateReceived() {
 
 	//the packet is received 
 	++ReceiverAuto::recvCount;
-
+		ReceiveMsg(&buffer[0]);
+		ReceiverAuto::sentCount = atoi(buffer);
 	//receive sent messages count and compare to the received count
 	SetState(RECEIVER_IDLE);
 }
