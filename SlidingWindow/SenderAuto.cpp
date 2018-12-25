@@ -2,7 +2,7 @@
 #include "SenderAuto.h"
 
 uint16 windowSize;
-char dataBuffer[20][BUFFER_SIZE];
+char dataBuffer[25][BUFFER_SIZE];
 char string[30];
 extern bool fsmEnd = false;
 uint16 windowCount;
@@ -46,8 +46,9 @@ void SenderAuto::NoFreeInstances() {
 }
 
 void SenderAuto::ChangeStateIdle() {
-
-	//char *ch=string;
+	int j = 0;
+	FILE* f;
+	
 	//calling sending message function,all connection to the server has alredy been configurated
 	if (firstPass)
 	{
@@ -62,25 +63,43 @@ void SenderAuto::ChangeStateIdle() {
 		Send(string);
 		///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
 		//reading input from file
-
-		FILE* f = fopen("Message.txt", "r");
+		 f = fopen("Message.txt", "r");
 		if (f == NULL)
 		{
 			printf("Could not open file!");
 		}
 
 		//read from file and put it the buffer
-		while ((fgets(dataBuffer[i], 100, f) != NULL) && (*dataBuffer[i] != '\n'))
+		/*while ((fgets(dataBuffer[i], 100, f) != NULL) )
 		{
+			if(*dataBuffer[i] != '\n')
 			++i;
+		}*/
+	//char **ch=&dataBuffer;
+		
+		while ((dataBuffer[i][j] = fgetc(f))!= EOF)
+		{
+			
+			if (dataBuffer[i][j] == '\n')
+			{
+				//move to the next message
+				i++;
+				j = 0;
+			}
+			else
+			{
+				//move to the next character inside the message 
+				j++;
+			}
 		}
+		//close the file safely
+		fclose(f);
 		msgCount = i;
 		lastWindow = i%windowSize;
 		//if the division residue is > 0 than there should be a plus one window for those messages 
 		if (lastWindow > 0)
 		{
 			windowCount = round(i / windowSize) + 1;
-			//lastWindow *= 10;
 		}
 		else
 		{
