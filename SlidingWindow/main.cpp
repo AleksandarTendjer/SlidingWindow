@@ -3,9 +3,9 @@
 #include "logfile.h"
 #include "SenderAuto.h"
 
-//char* dataBuffer[20];
-int i = 0;
 
+
+extern bool fsmEnd;
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
 
@@ -53,24 +53,26 @@ int  main(int argc, char *argv[]) {
 	
 
 	////////////////////////connecting//////////////////////////////////////////
-	if (CreateSocket() == -1)
+	/*if (CreateSocket() == -1)
 		return 1;
 	if (ConnectToServer() == -1)
-		return 1;
+		return 1;*/
 	///////////////////////////////////////////////////////////////////////////
 
 	/* Start operating thread. */
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);
 
-	/* Wait for keypress. */
-	getch();
+	/* wait for the program to finish */
+	while (!fsmEnd)
+	{}
 
 	/* Notify the system to stop - this causes the thread to finish */
 	printf("[*] Stopping system...\n");
 	sys.StopSystem();
 
-	CloseSocket();
+	//CloseSocket();
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
+
 	return 0;
 }

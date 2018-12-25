@@ -1,9 +1,15 @@
 #include "Communication.h"
 #include "SenderAuto.h"
 
-int windowSize;
-char* dataBuffer[20];
-
+uint16 windowSize;
+char dataBuffer[20][BUFFER_SIZE];
+char string[30];
+extern bool fsmEnd = false;
+uint16 windowCount;
+uint16 msgCount;
+double lastWindow;
+bool firstPass = true;
+int i = 0;
 SenderAuto::SenderAuto() : FiniteStateMachine(SENDER_FSM, SENDER_MBX_ID, 5, 5, 2) {
 }
 
@@ -40,51 +46,92 @@ void SenderAuto::NoFreeInstances() {
 }
 
 void SenderAuto::ChangeStateIdle() {
-	int i = 0;
+
+	//char *ch=string;
 	//calling sending message function,all connection to the server has alredy been configurated
-	char ch;
-	/////////////////////////////////Sending the window Size/////////////////////////////////////////////////
-	printf("Window size: \n");
-	//dynamically allocate the memory for the first string
-	dataBuffer[0] = (char*)malloc(BUFFER_SIZE * sizeof(char));
-	//prihvatanje karaktera sa tastature	
-	while ((ch = (char)getchar()) != '\n')
+	if (firstPass)
 	{
-		*dataBuffer[0] = ch;
-		 dataBuffer[0]++;
-	}
+		i = 0;
+		/////////////////////////////////Sending the window Size/////////////////////////////////////////////////
+		printf("Window size: \n");
+		scanf("%s", string);
 
-	*dataBuffer[0]= '\0';
-	//set window size
-	windowSize = atoi(dataBuffer[0]);
-	//send window size to the reciever
-	Send(dataBuffer[0]);
-	///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
-	//reading input from file
-	FILE* f = fopen("Message.txt", "r");
-	if (f == NULL)
-	{
-		printf("Could not open file!");
-	}
+		//set window size
+		windowSize =(uint16) atoi(string);
+		//send window size to the reciever
+		Send(dataBuffer[0]);
+		///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
+		//reading input from file
+	
+			FILE* f = fopen("Message.txt", "r");
+			if (f == NULL)
+			{
+				printf("Could not open file!");
+			}
 
-	//read from file and put it the buffer
-	while ((fgets(dataBuffer[i], 100, f) != NULL) && (*dataBuffer[i] != '\n'))
-	{
-		++i;
-		//dynamically alocate the memory for all other strings except the first one
-		dataBuffer[i]=(char*)malloc(BUFFER_SIZE*sizeof(char));
+			//read from file and put it the buffer
+			while ((fgets(dataBuffer[i], 100, f) != NULL) && (*dataBuffer[i] != '\n'))
+			{
+				++i;
+			}
+			msgCount = i;
+			lastWindow = i%windowSize;
+			//if the division residue is > 0 than there should be a plus one window for those messages 
+			if (lastWindow > 0)
+			{
+				windowCount = round(i / windowSize) + 1;
+				lastWindow *= 10;
+			}
+			else
+			{
+				windowCount = round(i / windowSize);
+				//last window is the same size as the windowSize
+				lastWindow = windowSize;
+			}
+			firstPass = false;
+			i = 0;
 	}
-	i = 0;
-	//send the messages
-	while (SenderAuto::sentCount < windowSize)
+	
+	//because the messages go from one to the end of the file,and the windowCount goes in the oposite direction
+	switch (windowCount)
 	{
-		Send(dataBuffer[i]);
-		//dealloc the memory 
-		free(dataBuffer[i]);
-		++i;
+		default:
+		{
+			if (SenderAuto::sentCount < windowSize)
+			{
+				Send(dataBuffer[i]);
+				++i;
+			}
+			else {
+				//the window is sent
+				SenderAuto::sentCount = 0;
+				--windowCount;
+			}
+			break;
+		}
+		case(1):
+		{
+			//for the last window
+			if (SenderAuto::sentCount < lastWindow)
+			{
+				Send(dataBuffer[i]);
+				++i;
+			}
+			else {
+				//the window is sent
+				SenderAuto::sentCount = 0;
+				--windowCount;
+			}
+			break;
+		}
+		case(0):
+		{
+			//exit the fsm
+			fsmEnd = true;
+			break;
+		}
 	}
-	//printf("SenderAuto[%d]::ChangeStateIdle() - receive message !\n", GetObjectId());
-	//send message so that initEventProc can be executed
+	
 	PrepareNewMessage(0x00, MSG_SENT_STATE);
 	SetMsgToAutomate(SENDER_FSM);
 	SetMsgObjectNumberTo(0);

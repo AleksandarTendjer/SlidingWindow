@@ -124,7 +124,7 @@ int ReceiveMessage()
 
 }
 //funkcija za prijem poruka
-int ReceiveWindow(char *msg)
+int ReceiveMsg(char *msg)
 {
 
 	while ((readSize = recv(sock, msg, MSG_LEN, 0))>0)
@@ -138,26 +138,4 @@ int ReceiveWindow(char *msg)
 	WSACleanup();
 	return -1;
 
-}
-//funkcija za generisanje iz terminala i slanje poruka
-int SendMessageFun()
-{
-	int i = 0;
-	char* ch;
-	ch = &message[0];
-	//printf("Your answer: \n");
-	//prihvatanje karaktera sa tastature	
-	while ((*ch = (char)getchar()) != '\n')
-	{
-		ch++;
-	}
-	*ch = '\0';
-
-	if (send(sock, (char*)&message, strlen(message), 0) < 0)
-	{
-		perror("Send failed\n");
-		WSACleanup();
-		return -1;
-	}
-	return 1;
 }

@@ -21,4 +21,4 @@ int CloseSocket();
 int ConnectToServer();
 int ReceiveMessage();
 int SendMessageFun();
-int ReceiveWindow(char *);
+int ReceiveMsg(char *);

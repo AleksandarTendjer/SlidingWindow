@@ -7,6 +7,7 @@
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
 int probabilityLoc;
+extern bool  fsmEnd;
 DWORD WINAPI SystemThread(void *data) {
 	ReceiverAuto automate;
 
@@ -14,9 +15,9 @@ DWORD WINAPI SystemThread(void *data) {
 	/* number of buffer types */
 	const uint8 buffClassNo =  4; 
 	/* number of buffers of each buffer type */
-	uint32 buffsCount[buffClassNo] = { 50, 50, 50, 10 }; 
+	uint32 buffsCount[buffClassNo] = { 50 }; 
 	/* buffer size for each buffer type */
- 	uint32 buffsLength[buffClassNo] = { 128, 256, 512, 1024}; 
+ 	uint32 buffsLength[buffClassNo] = { 128}; 
 	
 	/* Logging setting - to a file in this case */
 	LogFile lf("log.log" /*log file name*/, "./log.ini" /* message translator file */);
@@ -72,8 +73,11 @@ int main(int argc, char *argv[]) {
 	thread_handle = CreateThread(NULL, 0, SystemThread, NULL, 0, &thread_id);
 
 	/* Wait for keypress. */
-	getch();
-
+	//getch();
+	/* wait for the program to finish */
+	while (!fsmEnd)
+	{
+	}
 	/* Notify the system to stop - this causes the thread to finish */
 	printf("[*] Stopping system...\n");
 	sys.StopSystem();

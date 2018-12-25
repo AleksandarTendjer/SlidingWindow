@@ -1,6 +1,9 @@
 #include "Communication.h"
 #include "ReceiverAuto.h"
-
+extern bool fsmEnd = false;
+bool firstPass = true;
+char buffer[MSG_LEN];
+int percentage;
 ReceiverAuto::ReceiverAuto() : FiniteStateMachine(RECEIVER_FSM, RECEIVER_MBX_ID, 5, 5, 2) {
 }
 
@@ -46,19 +49,21 @@ void ReceiverAuto::Initialize() {
 
 void ReceiverAuto::ChangeStateIdle() {
 	//implement receiving messages and packet loss
-	char buffer[MSG_LEN];
-	int percentage;
-	if (ReceiverAuto::windowMsg == true)
+	if (firstPass)
 	{
-		ReceiveWindow(buffer);
+		if (ReceiverAuto::windowMsg == true)
+		{
+			ReceiveMsg(buffer);
 		ReceiverAuto:windowMsg = false;
+		}
+		windowSize = atoi(buffer);
+		//percentage of data loss
+		//every &percentage packet will be lost
+		//probability=number of packets we want to lose,
+		//every percentage packet will be lost in the window
+		percentage = round(windowSize / probability);
 	}
-	windowSize = atoi(buffer);
-	//percentage of data loss
-	//every &percentage packet will be lost
-	//probability=number of packets we want to lose,
-	//every percentage packet will be lost in the window
-	percentage = round(windowSize/probability);
+	ReceiveMsg(buffer);
 	++ReceiverAuto::sentCount;
 	//if percentage is 
 	if ((sentCount%percentage)!= 0)
