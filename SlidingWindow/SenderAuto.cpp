@@ -59,7 +59,7 @@ void SenderAuto::ChangeStateIdle() {
 		//set window size
 		windowSize = (uint16)atoi(string);
 		//send window size to the reciever
-		Send(dataBuffer[0]);
+		Send(string);
 		///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
 		//reading input from file
 
