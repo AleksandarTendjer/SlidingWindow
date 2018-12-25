@@ -53,10 +53,10 @@ int  main(int argc, char *argv[]) {
 	
 
 	////////////////////////connecting//////////////////////////////////////////
-	/*if (CreateSocket() == -1)
+	if (CreateSocket() == -1)
 		return 1;
 	if (ConnectToServer() == -1)
-		return 1;*/
+		return 1;
 	///////////////////////////////////////////////////////////////////////////
 
 	/* Start operating thread. */
