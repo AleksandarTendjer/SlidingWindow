@@ -31,25 +31,12 @@ int CreateSocket()
 
 	if (sock == -1)
 	{
-		perror("Could not create client socket\n");
+		perror("Could not create server socket\n");
 		WSACleanup();
 		return -1;
 	}
 
-	// Initialize memory for address structure
-	memset((char*)&server, 0, sizeof(server));
-	ch = &message[0];
-
-	//get the server IP
-	printf("IP adress of receiver: \n");
-	//prihvatanje karaktera sa tastature	
-	while ((*ch = (char)getchar()) != '\n')
-	{
-		ch++;
-	}
-	*ch = '\0';
-
-	server.sin_addr.s_addr = inet_addr(message);
+	server.sin_addr.s_addr = INADDR_ANY;
 	server.sin_family = AF_INET;
 	server.sin_port = htons(DEFAULT_PORT);
 
