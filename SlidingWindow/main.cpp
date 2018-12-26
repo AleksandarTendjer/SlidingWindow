@@ -73,6 +73,7 @@ int  main(int argc, char *argv[]) {
 	//CloseSocket();
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
-
+	//just to se the output
+	getch();
 	return 0;
 }

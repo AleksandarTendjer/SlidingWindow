@@ -5,6 +5,8 @@ bool firstPass = true;
 char buffer[MSG_LEN];
 int percentage;
 int windowCount = 0;
+int sentCountSender = 0;
+
 ReceiverAuto::ReceiverAuto() : FiniteStateMachine(RECEIVER_FSM, RECEIVER_MBX_ID, 5, 5, 2) {
 }
 
@@ -22,9 +24,9 @@ uint8 ReceiverAuto::GetMbxId() {
 }
 
 MessageInterface *ReceiverAuto::GetMessageInterface(uint32 id) {
-  if(id == 0) 
-	  return &StandardMsgCoding;
-  throw TErrorObject( __LINE__, __FILE__, 0x01010400);
+	if (id == 0)
+		return &StandardMsgCoding;
+	throw TErrorObject(__LINE__, __FILE__, 0x01010400);
 }
 
 void ReceiverAuto::SetDefaultHeader(uint8 infoCoding) {
@@ -41,10 +43,10 @@ void ReceiverAuto::NoFreeInstances() {
 }
 
 void ReceiverAuto::Initialize() {
-  SetState(RECEIVER_IDLE);
-  InitEventProc(RECEIVER_IDLE, MSG_CHANGE_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateIdle);
-  InitEventProc(RECEIVER_RECEIVED, MSG_RECEIVED_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateReceived);
-  SetDefaultFSMData();
+	SetState(RECEIVER_IDLE);
+	InitEventProc(RECEIVER_IDLE, MSG_CHANGE_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateIdle);
+	InitEventProc(RECEIVER_RECEIVED, MSG_RECEIVED_STATE, (PROC_FUN_PTR)&ReceiverAuto::ChangeStateReceived);
+	SetDefaultFSMData();
 }
 
 
@@ -66,46 +68,65 @@ void ReceiverAuto::ChangeStateIdle() {
 		ReceiveMsg(buffer);
 		//receive windowCount
 		windowCount = atoi(buffer);
-		firstPass = false;
+		ReceiverAuto::sentCount++;
+		
 	}
 	if (windowCount == 0)
 	{
 		fsmEnd = true;
 		SysSetLogFlag(LOG_END);
 	}
-	ReceiveMsg(buffer);
-	//if percentage is 
-	if ((ReceiverAuto::sentCount%percentage)!= 0)
-	{
 
-		// sending a message to itself so that the Receiver Automate can change state
-		PrepareNewMessage(0x00, MSG_RECEIVED_STATE);
-		SetMsgToAutomate(RECEIVER_FSM);
-		SetMsgObjectNumberTo(0);
-		SendMessage(RECEIVER_MBX_ID);
-		SetState(RECEIVER_RECEIVED);
-	}
-	else //get back to idle state
-	{
-		// sending a message to itself so that the Receiver Automate can change state
-		PrepareNewMessage(0x00, MSG_CHANGE_STATE);
-		SetMsgToAutomate(RECEIVER_FSM);
-		SetMsgObjectNumberTo(0);
-		SendMessage(RECEIVER_MBX_ID);
-		SetState(RECEIVER_IDLE);
-	}
+	//if percentage is 
+	if (!fsmEnd)
+		if ((ReceiverAuto::sentCount%percentage) != 0)
+		{
+			if (firstPass == true)
+			{
+				ReceiverAuto::sentCount = 0;
+				firstPass = false;
+			}
+			//receiving the message
+			ReceiveMsg(buffer);
+			ReceiverAuto::sentCount++;
+			SetState(RECEIVER_RECEIVED);
+			// sending a message to itself so that the Receiver Automate can change state
+			PrepareNewMessage(0x00, MSG_RECEIVED_STATE);
+			SetMsgToAutomate(RECEIVER_FSM);
+			SetMsgObjectNumberTo(0);
+			SendMessage(RECEIVER_MBX_ID);
+
+		}
+		else //get back to idle state
+		{
+			ReceiverAuto::sentCount++;
+			SetState(RECEIVER_IDLE);
+			// sending a message to itself so that the Receiver Automate can change state
+			PrepareNewMessage(0x00, MSG_CHANGE_STATE);
+			SetMsgToAutomate(RECEIVER_FSM);
+			SetMsgObjectNumberTo(0);
+			SendMessage(RECEIVER_MBX_ID);
+
+		}
 }
 void ReceiverAuto::ChangeStateReceived() {
 
 	//the packet is received 
 	++ReceiverAuto::recvCount;
-		ReceiveMsg(&buffer[0]);
-		ReceiverAuto::sentCount = atoi(buffer);
-		if (ReceiverAuto::sentCount % 12 == 0)
-			--windowCount;
+	ReceiveMsg(buffer);
+	//same as the 
+	sentCountSender = atoi(buffer);
+	ReceiverAuto::difference = ReceiverAuto::sentCount - ReceiverAuto::recvCount;
+
+	if (ReceiverAuto::sentCount % 12 == 0)
+		--windowCount;
 
 	//receive sent messages count and compare to the received count
 	SetState(RECEIVER_IDLE);
+	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
+	SetMsgToAutomate(RECEIVER_FSM);
+	SetMsgObjectNumberTo(0);
+	SendMessage(RECEIVER_MBX_ID);
 }
 
 /* Initial system message */

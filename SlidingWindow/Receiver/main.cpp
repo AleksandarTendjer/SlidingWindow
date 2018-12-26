@@ -7,6 +7,8 @@
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
 int probabilityLoc;
+int sentCountLoc;
+int recvCountLoc;
 extern bool  fsmEnd;
 DWORD WINAPI SystemThread(void *data) {
 	ReceiverAuto automate;
@@ -38,10 +40,11 @@ DWORD WINAPI SystemThread(void *data) {
 	/* Starts the system - dispatches system messages */
 	printf("[*] Starting system...\n");
 	sys.Start();
+
 	//ouput details
-	printf("Sent packets: %d",automate.sentCount);
-	printf("Received packets: %d", automate.recvCount);
-	printf("Probability of packet loss: %d",automate.probability);
+	sentCountLoc=automate.sentCount;
+	recvCountLoc=automate.recvCount;
+	probabilityLoc=automate.probability;
 	/* Finish thread */
 	return 0;
 }
@@ -49,7 +52,14 @@ DWORD WINAPI SystemThread(void *data) {
 int main(int argc, char *argv[]) {
 	DWORD thread_id;
 	HANDLE thread_handle;
-	probabilityLoc = atoi(argv[1]);
+	if (argv[1] != NULL)
+	{
+		probabilityLoc = atoi(argv[1]);
+	}
+	else
+	{
+		probabilityLoc = 3;
+	}
 	///////////////////////////////////////////////Creating a server socket,listening and accepting////////////////////////////////
 	if (CreateSocket() < 0)
 	{
@@ -73,8 +83,13 @@ int main(int argc, char *argv[]) {
 	/* Notify the system to stop - this causes the thread to finish */
 	printf("[*] Stopping system...\n");
 	sys.StopSystem();
+	printf("Received messages count:%d \n",recvCountLoc);
+	printf("Sent messages count:%d \n", sentCountLoc);
+	printf("Probability of packet loss: \n", probabilityLoc);
 
 	/* Free the thread handle */
 	CloseHandle(thread_handle);
+//just to see the output
+	getch();
 	return 0;
 }

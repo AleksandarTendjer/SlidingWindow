@@ -29,6 +29,7 @@ public:
 	int recvCount = 0;
 	int sentCount = 0;
 	int probability = 0;
+	int difference = 0;
 	void Initialize();
 	void Start();
 	void ChangeStateIdle();

@@ -48,7 +48,8 @@ void SenderAuto::NoFreeInstances() {
 void SenderAuto::ChangeStateIdle() {
 	int j = 0;
 	FILE* f;
-	
+	printf("Cycle: %d \n", sentCount);
+	printf("SenderAuto[%d]::ChangeStateIdle()  !\n", GetObjectId());
 	//calling sending message function,all connection to the server has alredy been configurated
 	if (firstPass)
 	{
@@ -63,16 +64,16 @@ void SenderAuto::ChangeStateIdle() {
 		Send(string);
 		///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
 		//reading input from file
-		 f = fopen("Message.txt", "r");
+		f = fopen("Message.txt", "rb");
 		if (f == NULL)
 		{
 			printf("Could not open file!");
 		}
 
 		//read from file and put it the buffer
-		while ((dataBuffer[i][j] = fgetc(f))!= EOF)
+		while ((dataBuffer[i][j] = fgetc(f)) != EOF)
 		{
-			
+
 			if (dataBuffer[i][j] == '\n')
 			{
 				//move to the next message
@@ -101,7 +102,7 @@ void SenderAuto::ChangeStateIdle() {
 			lastWindow = windowSize;
 		}
 		//send window count to receiver
-		sprintf(string,"%d",windowCount);
+		sprintf(string, "%d", windowCount);
 		Send(string);
 		firstPass = false;
 		i = 0;
@@ -166,7 +167,8 @@ void SenderAuto::ChangeStateSent() {
 	printf("SenderAuto[%d]::ChangeStateSent()  !\n", GetObjectId());
 	SenderAuto::sentCount++;
 	//send message to 
-	Send(itoa(SenderAuto::sentCount, dataBuffer[0], 10));
+	itoa(SenderAuto::sentCount, string, 10);
+	Send(string);
 	//send message so that initEventProc can be executed
 	PrepareNewMessage(0x00, MSG_CHANGE_STATE);
 	SetMsgToAutomate(SENDER_FSM);
