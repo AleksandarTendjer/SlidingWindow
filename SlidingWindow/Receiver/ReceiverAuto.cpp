@@ -4,6 +4,7 @@ extern bool fsmEnd = false;
 bool firstPass = true;
 char buffer[MSG_LEN];
 int percentage;
+int windowCount = 0;
 ReceiverAuto::ReceiverAuto() : FiniteStateMachine(RECEIVER_FSM, RECEIVER_MBX_ID, 5, 5, 2) {
 }
 
@@ -62,10 +63,19 @@ void ReceiverAuto::ChangeStateIdle() {
 		//probability=number of packets we want to lose,
 		//every percentage packet will be lost in the window
 		percentage = round(windowSize / probability);
+		ReceiveMsg(buffer);
+		//receive windowCount
+		windowCount = atoi(buffer);
+		firstPass = false;
+	}
+	if (windowCount == 0)
+	{
+		fsmEnd = true;
+		SysSetLogFlag(LOG_END);
 	}
 	ReceiveMsg(buffer);
 	//if percentage is 
-	if ((sentCount%percentage)!= 0)
+	if ((ReceiverAuto::sentCount%percentage)!= 0)
 	{
 
 		// sending a message to itself so that the Receiver Automate can change state
@@ -91,6 +101,9 @@ void ReceiverAuto::ChangeStateReceived() {
 	++ReceiverAuto::recvCount;
 		ReceiveMsg(&buffer[0]);
 		ReceiverAuto::sentCount = atoi(buffer);
+		if (ReceiverAuto::sentCount % 12 == 0)
+			--windowCount;
+
 	//receive sent messages count and compare to the received count
 	SetState(RECEIVER_IDLE);
 }

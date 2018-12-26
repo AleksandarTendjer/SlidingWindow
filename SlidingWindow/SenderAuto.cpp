@@ -70,13 +70,6 @@ void SenderAuto::ChangeStateIdle() {
 		}
 
 		//read from file and put it the buffer
-		/*while ((fgets(dataBuffer[i], 100, f) != NULL) )
-		{
-			if(*dataBuffer[i] != '\n')
-			++i;
-		}*/
-	//char **ch=&dataBuffer;
-		
 		while ((dataBuffer[i][j] = fgetc(f))!= EOF)
 		{
 			
@@ -107,6 +100,9 @@ void SenderAuto::ChangeStateIdle() {
 			//last window is the same size as the windowSize
 			lastWindow = windowSize;
 		}
+		//send window count to receiver
+		sprintf(string,"%d",windowCount);
+		Send(string);
 		firstPass = false;
 		i = 0;
 	}
