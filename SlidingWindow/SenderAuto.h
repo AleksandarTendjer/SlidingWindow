@@ -25,6 +25,7 @@ class SenderAuto : public FiniteStateMachine {
 public:
 	SenderAuto();
 	~SenderAuto();
+	int windowSize = 0;
 	int sentCount = 0;
 	void ChangeStateIdle();
 	void ChangeStateSent();

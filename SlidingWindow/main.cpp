@@ -4,7 +4,7 @@
 #include "SenderAuto.h"
 
 
-
+int windowSizeLoc;
 extern bool fsmEnd;
 /* FSM system instance. */
 static FSMSystem sys(1 /* max number of automates types */, 1 /* max number of msg boxes */);
@@ -22,6 +22,7 @@ DWORD WINAPI SystemThread(void *data) {
 	uint32 buffsCount[buffClassNo] = { 50, 50, 50, 10 }; 
 	/* buffer size for each buffer type */
  	uint32 buffsLength[buffClassNo] = { 128, 256, 512, 1024}; 
+	automate.windowSize = windowSizeLoc;
 	
 	/* Logging setting - to a file in this case */
 	LogFile lf("log.log" /*log file name*/, "./log.ini" /* message translator file */);
@@ -51,7 +52,7 @@ int  main(int argc, char *argv[]) {
 	HANDLE thread_handle;
 
 	
-
+	windowSizeLoc = atoi(argv[1]);
 	////////////////////////connecting//////////////////////////////////////////
 	if (CreateSocket() == -1)
 		return 1;

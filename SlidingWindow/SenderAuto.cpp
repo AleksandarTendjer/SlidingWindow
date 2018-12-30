@@ -1,7 +1,7 @@
 #include "Communication.h"
 #include "SenderAuto.h"
 
-uint16 windowSize;
+//uint16 windowSize;
 char dataBuffer[25][BUFFER_SIZE];
 char string[30];
 extern bool fsmEnd = false;
@@ -48,19 +48,19 @@ void SenderAuto::NoFreeInstances() {
 void SenderAuto::ChangeStateIdle() {
 	int j = 0;
 	FILE* f;
-	printf("Cycle: %d \n", sentCount);
-	printf("SenderAuto[%d]::ChangeStateIdle()  !\n", GetObjectId());
+
 	//calling sending message function,all connection to the server has alredy been configurated
 	if (firstPass)
 	{
 		i = 0;
 		/////////////////////////////////Sending the window Size/////////////////////////////////////////////////
-		printf("Window size: \n");
-		scanf("%s", string);
+		//printf("Window size: \n");
+		//scanf("%s", string);
 
 		//set window size
-		windowSize = (uint16)atoi(string);
+		//windowSize = (uint16)atoi(string);
 		//send window size to the reciever
+		itoa(windowSize, string, 10);
 		Send(string);
 		///////////////////////////////////////Sending the packets////////////////////////////////////////////////////////
 		//reading input from file

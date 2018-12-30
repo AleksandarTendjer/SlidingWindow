@@ -120,7 +120,8 @@ int ReceiveMsg(char *msg)
 		puts(msg);
 		return 1;
 	}
-
+	int k = WSAGetLastError();
+	printf("%d",k);
 	perror("Transfer form  sender failed \n");
 	WSACleanup();
 	return -1;
